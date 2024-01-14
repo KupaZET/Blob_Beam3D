@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
+
+[RequireComponent(typeof(Animator))]
 public class PlayerMovement : MonoBehaviour
 {
     public enum PlayerState
@@ -43,9 +45,11 @@ public class PlayerMovement : MonoBehaviour
     Vector3 moveDirection;
 
     Rigidbody rb;
+    private Animator _animatorController;
 
     private void Start()
     {
+        _animatorController = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
         state = PlayerState.Idle;
@@ -94,7 +98,16 @@ public class PlayerMovement : MonoBehaviour
         
         if(grounded)
         {
-            state = moveDirection == Vector3.zero ? PlayerState.Idle : PlayerState.Walk; 
+            state = moveDirection == Vector3.zero ? PlayerState.Idle : PlayerState.Walk;
+            if(state == PlayerState.Walk || state == PlayerState.Jump)
+            {
+                _animatorController.SetBool("moving", true);
+            }
+            else
+            {
+                _animatorController.SetBool("moving", false);
+            }
+
             rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
         }
         else if(!grounded)
@@ -118,6 +131,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Jump()
     {
+        _animatorController.SetTrigger("jump");
         rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
 
         rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+
+[RequireComponent(typeof(Animator))]
 public class EnemyMovement : MonoBehaviour
 {
     public enum EnemyState
@@ -27,9 +29,11 @@ public class EnemyMovement : MonoBehaviour
     public Transform startPoint;
     public Transform endPoint;
     private Transform target;
+    private Animator _animatorController;
 
     void Start()
     {
+        _animatorController = GetComponent<Animator>();
         currentState = EnemyState.Walk;
         initialPosition = transform.position;
         hitsTaken = 0;
@@ -42,12 +46,15 @@ public class EnemyMovement : MonoBehaviour
         switch (currentState)
         {
             case EnemyState.Walk:
+                _animatorController.SetBool("seePlayer", false);
                 Walk();
                 break;
             case EnemyState.Attack:
+                _animatorController.SetBool("seePlayer", true);
                 Attack();
                 break;
             case EnemyState.RunAway:
+                _animatorController.SetTrigger("damage");
                 RunAway();
                 break;
             case EnemyState.Dead:
