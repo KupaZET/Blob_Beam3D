@@ -5,6 +5,14 @@ using TMPro;
 
 public class PlayerMovement : MonoBehaviour
 {
+    public enum PlayerState
+    {
+        Idle,
+        Walk,
+        Jump,
+        Dead
+    }
+
     [Header("Movement")]
     public float moveSpeed;
 
@@ -30,6 +38,7 @@ public class PlayerMovement : MonoBehaviour
 
     float horizontalInput;
     float verticalInput;
+    private PlayerState state;
 
     Vector3 moveDirection;
 
@@ -39,7 +48,7 @@ public class PlayerMovement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
-
+        state = PlayerState.Idle;
         readyToJump = true;
     }
 
@@ -58,7 +67,10 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        MovePlayer();
+        if (state != PlayerState.Dead)
+        {
+            MovePlayer();
+        }
     }
 
     private void MyInput()
@@ -79,12 +91,15 @@ public class PlayerMovement : MonoBehaviour
     private void MovePlayer()
     {
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
+        
         if(grounded)
         {
+            state = moveDirection == Vector3.zero ? PlayerState.Idle : PlayerState.Walk; 
             rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
         }
         else if(!grounded)
         {
+            state = PlayerState.Jump;
             rb.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
         }
     }
@@ -107,8 +122,15 @@ public class PlayerMovement : MonoBehaviour
 
         rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
     }
+
     private void ResetJump()
     {
         readyToJump = true;
+    }
+
+    private void PlayerDeath()
+    {
+        //TODO the rest of this function
+        state = PlayerState.Dead;
     }
 }

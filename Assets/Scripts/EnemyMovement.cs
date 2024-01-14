@@ -27,6 +27,7 @@ public class EnemyMovement : MonoBehaviour
     public Transform startPoint;
     public Transform endPoint;
     private Transform target;
+
     void Start()
     {
         currentState = EnemyState.Walk;
@@ -38,7 +39,6 @@ public class EnemyMovement : MonoBehaviour
 
     void Update()
     {
-        Debug.Log(currentState);
         switch (currentState)
         {
             case EnemyState.Walk:
@@ -61,7 +61,7 @@ public class EnemyMovement : MonoBehaviour
     void Walk()
     {
         transform.position = Vector3.MoveTowards(transform.position, target.position, walkSpeed * Time.deltaTime);
-
+        
         // Check if the enemy has reached the target
         if (Vector3.Distance(transform.position, target.position) < 1f)
         {
@@ -113,7 +113,6 @@ public class EnemyMovement : MonoBehaviour
     bool IsPlayerJumpingOnEnemy()
     {
         Rigidbody playerRigidbody = playerTransform.GetComponent<Rigidbody>();
-        Debug.Log(playerRigidbody);
 
         if (playerRigidbody != null && 
             playerTransform.position.y > transform.position.y &&
