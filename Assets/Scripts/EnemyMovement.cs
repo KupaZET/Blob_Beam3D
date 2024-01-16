@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 
 [RequireComponent(typeof(Animator))]
@@ -19,9 +20,8 @@ public class EnemyMovement : MonoBehaviour
     public float runAwaySpeed = 5f;
     public float detectionRange = 5f;
 
-    private EnemyState currentState;
+    public static EnemyState enemyState;
     public Transform playerTransform;
-    private Vector3 initialPosition;
     private int hitsTaken;
     private bool isHitCooldown;
     public float hitCooldownDuration = 2f;
@@ -30,12 +30,12 @@ public class EnemyMovement : MonoBehaviour
     public Transform endPoint;
     private Transform target;
     private Animator _animatorController;
+    public int corpseDuration;
 
     void Start()
     {
         _animatorController = GetComponent<Animator>();
-        currentState = EnemyState.Walk;
-        initialPosition = transform.position;
+        enemyState = EnemyState.Walk;
         hitsTaken = 0;
         rb = GetComponent<Rigidbody>();
         target = endPoint;
@@ -43,7 +43,7 @@ public class EnemyMovement : MonoBehaviour
 
     void Update()
     {
-        switch (currentState)
+        switch (enemyState)
         {
             case EnemyState.Walk:
                 _animatorController.SetBool("seePlayer", false);
@@ -59,7 +59,7 @@ public class EnemyMovement : MonoBehaviour
                 break;
             case EnemyState.Dead:
                 _animatorController.SetTrigger("DeathEnemy");
-                Dead();
+                Invoke("Dead", corpseDuration);
                 break;
         }
 
@@ -78,9 +78,9 @@ public class EnemyMovement : MonoBehaviour
         }
 
         // Check if the player is in front of the enemy to switch to Attack state
-        if (Vector3.Distance(transform.position, playerTransform.position) < detectionRange)
+        if (Vector3.Distance(transform.position, playerTransform.position) < detectionRange && PlayerMovement.state != PlayerMovement.PlayerState.Dead)
         {
-            currentState = hitsTaken == 1 ? EnemyState.RunAway : EnemyState.Attack;
+            enemyState = hitsTaken == 1 ? EnemyState.RunAway : EnemyState.Attack;
         }
     }
 
@@ -89,13 +89,11 @@ public class EnemyMovement : MonoBehaviour
         // Move towards the player
         transform.position = Vector3.MoveTowards(transform.position, playerTransform.position, walkSpeed * Time.deltaTime);
 
-        // Check if the player is still in range
-        if (Vector3.Distance(transform.position, playerTransform.position) > detectionRange)
+        // Check if the player is still in range or dead
+        if (Vector3.Distance(transform.position, playerTransform.position) > detectionRange || PlayerMovement.state == PlayerMovement.PlayerState.Dead)
         {
-            currentState = EnemyState.Walk;
+            enemyState = EnemyState.Walk;
         }
-
-        PlayerAttacked();
     }
 
     void RunAway()
@@ -107,31 +105,13 @@ public class EnemyMovement : MonoBehaviour
         if (Vector3.Distance(transform.position, playerTransform.position) > detectionRange)
         {
             hitsTaken = 0; // Get healthy if ran away successfully
-            currentState = EnemyState.Walk;
+            enemyState = EnemyState.Walk;
         }
-
-        PlayerAttacked();
     }
 
     void Dead()
     {
         Destroy(gameObject);
-    }
-
-    bool IsPlayerJumpingOnEnemy()
-    {
-        Rigidbody playerRigidbody = playerTransform.GetComponent<Rigidbody>();
-
-        if (playerRigidbody != null && 
-            playerTransform.position.y > transform.position.y &&
-            playerRigidbody.velocity.y < 0f &&
-            Mathf.Abs(playerTransform.position.x - transform.position.x) < 1.0f &&
-            Mathf.Abs(playerTransform.position.z - transform.position.z) < 1.0f)
-        {
-                return true;
-        }
-
-        return false;
     }
 
     void ResetHitCooldown()
@@ -150,22 +130,20 @@ public class EnemyMovement : MonoBehaviour
         }
     }
 
-    private void PlayerAttacked()
+    private void OnTriggerEnter(Collider other)
     {
-        // Check if the player hits the enemy
-        if (IsPlayerJumpingOnEnemy() && currentState != EnemyState.Dead && !isHitCooldown)
+        if (playerTransform.gameObject == other.gameObject && enemyState != EnemyState.Dead && !isHitCooldown)
         {
             hitsTaken++;
-
             if (hitsTaken == 1)
             {
-                currentState = EnemyState.RunAway;
+                enemyState = EnemyState.RunAway;
                 isHitCooldown = true;
                 Invoke("ResetHitCooldown", hitCooldownDuration);
             }
             else if (hitsTaken >= 2)
             {
-                currentState = EnemyState.Dead;
+                enemyState = EnemyState.Dead;
             }
         }
     }

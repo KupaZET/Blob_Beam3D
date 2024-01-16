@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 
 [RequireComponent(typeof(Animator))]
@@ -34,18 +35,21 @@ public class PlayerMovement : MonoBehaviour
     [Header("Ground Check")]
     public float playerHeight;
     public LayerMask whatIsGround;
-    bool grounded;
+    public bool grounded;
 
     public Transform orientation;
 
     float horizontalInput;
     float verticalInput;
-    private PlayerState state;
+    public static PlayerState state;
 
     Vector3 moveDirection;
 
     Rigidbody rb;
-    private Animator _animatorController;
+    public Animator _animatorController;
+    public Collider enemyCollider;
+    public int corpseDuration;
+    public static GameObject underPlayer;
 
     private void Start()
     {
@@ -58,7 +62,12 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.3f, whatIsGround);
+        RaycastHit hit;
+        grounded = Physics.Raycast(transform.position, Vector3.down, out hit, playerHeight * 0.5f + 0.3f, whatIsGround);
+        if(grounded == true)
+        {
+            underPlayer = hit.collider.gameObject;
+        }
 
         MyInput();
         SpeedControl();
@@ -142,10 +151,21 @@ public class PlayerMovement : MonoBehaviour
         readyToJump = true;
     }
 
-    private void PlayerDeath()
+    private void OnTriggerEnter(Collider other)
     {
-        //TODO the rest of this function
-        _animatorController.SetTrigger("Death");
-        state = PlayerState.Dead;
+        if (enemyCollider.gameObject.name == other.gameObject.name && state != PlayerState.Dead && grounded && underPlayer.name != "StoneHead" 
+            && (EnemyMovement.enemyState != EnemyMovement.EnemyState.Dead || EnemyMovement.enemyState != EnemyMovement.EnemyState.RunAway))
+        {
+            _animatorController.SetTrigger("Death");
+            state = PlayerState.Dead;
+            Invoke("MainMenu", corpseDuration);
+        }
+    }
+
+    private void MainMenu()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        SceneManager.LoadScene(0);
     }
 }
