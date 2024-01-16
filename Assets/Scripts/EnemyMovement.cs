@@ -58,6 +58,7 @@ public class EnemyMovement : MonoBehaviour
                 RunAway();
                 break;
             case EnemyState.Dead:
+                _animatorController.SetTrigger("DeathEnemy");
                 Dead();
                 break;
         }

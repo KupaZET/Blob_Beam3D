@@ -145,6 +145,7 @@ public class PlayerMovement : MonoBehaviour
     private void PlayerDeath()
     {
         //TODO the rest of this function
+        _animatorController.SetTrigger("Death");
         state = PlayerState.Dead;
     }
 }
