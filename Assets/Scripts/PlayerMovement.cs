@@ -158,14 +158,22 @@ public class PlayerMovement : MonoBehaviour
         {
             _animatorController.SetTrigger("Death");
             state = PlayerState.Dead;
-            Invoke("MainMenu", corpseDuration);
+
+            LoadScene("MainMenuScene");
         }
     }
 
-    private void MainMenu()
+    public void LoadScene(string sceneName)
     {
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
-        SceneManager.LoadScene(0);
+        StartCoroutine(nameof(LoadSceneAfterSecond), sceneName);
+    }
+
+    private IEnumerator LoadSceneAfterSecond(string sceneName)
+    {
+        if (string.IsNullOrEmpty(sceneName) == false)
+        {
+            yield return new WaitForSeconds(corpseDuration);
+            SceneManager.LoadScene(sceneName);
+        }
     }
 }
