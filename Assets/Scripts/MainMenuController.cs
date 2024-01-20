@@ -24,16 +24,21 @@ public class MainMenuController : MonoBehaviour
     public void PlayGame()
     {
         ScoreHandler.Start();
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        SceneManager.LoadScene("MainScene");
     }
 
     public void MainMenu()
     {
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene("MainMenuScene");
     }
 
     public void QuitGame()
     {
         Application.Quit();
+    }
+
+    public void LeaderBoard()
+    {
+        SceneManager.LoadScene("LeaderBoardScene");
     }
 }
