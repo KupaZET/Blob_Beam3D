@@ -153,8 +153,9 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (enemyCollider.gameObject.name == other.gameObject.name && state != PlayerState.Dead && grounded && underPlayer.name != "StoneHead" 
-            && (EnemyMovement.enemyState != EnemyMovement.EnemyState.Dead || EnemyMovement.enemyState != EnemyMovement.EnemyState.RunAway))
+        if ((enemyCollider.gameObject.name == other.gameObject.name && state != PlayerState.Dead && grounded && underPlayer.name != "StoneHead" 
+            && (EnemyMovement.enemyState != EnemyMovement.EnemyState.Dead || EnemyMovement.enemyState != EnemyMovement.EnemyState.RunAway)) 
+            || (other.transform.parent != null && other.transform.parent.gameObject.name == "DamagesPlayer"))
         {
             _animatorController.SetTrigger("Death");
             state = PlayerState.Dead;
