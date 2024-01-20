@@ -174,6 +174,8 @@ public class PlayerMovement : MonoBehaviour
         if (string.IsNullOrEmpty(sceneName) == false)
         {
             yield return new WaitForSeconds(corpseDuration);
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
             SceneManager.LoadScene(sceneName);
         }
     }
