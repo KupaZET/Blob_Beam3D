@@ -1,18 +1,45 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static PlayerMovement;
 
 public class duplicateObject : MonoBehaviour
 {
     public GameObject objectToPlace;
     public int numberOfObjects = 10;
     public Vector3 areaSize = new Vector3(10, 0, 10);
+    public bool isFirst = true;
 
     void Start()
     {
-        for (int i = 0; i < numberOfObjects; i++)
+        if (isFirst) 
         {
-            PlaceRandomObject();
+            for (int i = 0; i < numberOfObjects; i++)
+            {
+                PlaceRandomObject();
+            }
+        }
+
+        Vector3[] rayDirections = {
+            transform.forward,         // forward
+            transform.forward + transform.right,    // forward-right
+            transform.right,           // right
+            transform.right - transform.forward,   // back-right
+            -transform.forward,        // back
+            -transform.forward - transform.right, // back-left
+            -transform.right,           // left
+            -transform.right + transform.forward   // forward-left
+        };
+
+        foreach (Vector3 direction in rayDirections)
+        {
+            Ray ray = new Ray(transform.position, direction);
+
+            // Perform the raycast
+            if (Physics.Raycast(ray, 3))
+            {
+                Destroy(gameObject);
+            }
         }
     }
 
@@ -36,6 +63,14 @@ public class duplicateObject : MonoBehaviour
         if (newObject.GetComponent<BoxCollider>() == null)
         {
             newObject.AddComponent<BoxCollider>();
+        }
+
+        if (newObject.GetComponent<duplicateObject>() == null)
+        {
+            var newScript = newObject.AddComponent<duplicateObject>();
+            newScript.objectToPlace = objectToPlace;
+            newScript.areaSize = areaSize;
+            newScript.isFirst = false;
         }
     }
 }
