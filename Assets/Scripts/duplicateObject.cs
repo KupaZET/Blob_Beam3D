@@ -6,6 +6,7 @@ using static PlayerMovement;
 public class duplicateObject : MonoBehaviour
 {
     public GameObject objectToPlace;
+    public RuntimeAnimatorController controller;
     public int numberOfObjects = 10;
     public Vector3 areaSize = new Vector3(10, 0, 10);
     public bool isFirst = true;
@@ -63,6 +64,12 @@ public class duplicateObject : MonoBehaviour
         if (newObject.GetComponent<BoxCollider>() == null)
         {
             newObject.AddComponent<BoxCollider>();
+        }
+
+        if (newObject.GetComponent<Animator>() == null)
+        {
+            Animator animator = newObject.AddComponent<Animator>();
+            animator.runtimeAnimatorController = controller;
         }
 
         if (newObject.GetComponent<duplicateObject>() == null)
