@@ -7,15 +7,26 @@ using System;
 public class LeaderBoardController : MonoBehaviour
 {
     public TextMeshProUGUI leaderboard;
+    public static LeaderBoardController Instance { get; private set; }
 
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
-        UpdateLeaderBoard();
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    public void Start()
+    {
         DisplayLeaderBoard();
     }
 
-    public void UpdateLeaderBoard()
+    public static void UpdateLeaderBoard()
     {
         float timeCurrent = ((float)ScoreHandler.GetTime().TotalMilliseconds);
         float[] times = new float[3];
@@ -45,10 +56,13 @@ public class LeaderBoardController : MonoBehaviour
             PlayerPrefs.SetFloat("Time" + i, times[i]);
         }
         PlayerPrefs.Save();
+
+        Instance.DisplayLeaderBoard();
     }
 
     public void DisplayLeaderBoard()
     {
+        leaderboard.text = "";
         for (int i = 0; i < 3; i++)
         {
             var time = PlayerPrefs.GetFloat("Time" + i, 0.0f);
@@ -56,8 +70,11 @@ public class LeaderBoardController : MonoBehaviour
         }
     }
 
-    public void AddTime()
+    public void DeleteRecords()
     {
-        UpdateLeaderBoard();
+        PlayerPrefs.DeleteAll();
+        PlayerPrefs.Save();
+
+        DisplayLeaderBoard();
     }
 }

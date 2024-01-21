@@ -13,6 +13,7 @@ public class MainMenuController : MonoBehaviour
     {
         if (Score != null)
         {
+            LeaderBoardController.UpdateLeaderBoard();
             var time = ScoreHandler.GetTime();
             Score.text =
                 $"Time: {time.Minutes,0}m {time.Seconds,0}s\n" +

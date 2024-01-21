@@ -337,6 +337,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Score: {fileID: 794344909}
+  leaderboard: {fileID: 1345346060}
 --- !u!1 &215033900
 GameObject:
   m_ObjectHideFlags: 0
