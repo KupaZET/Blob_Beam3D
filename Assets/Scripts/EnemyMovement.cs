@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
@@ -8,6 +9,20 @@ using UnityEngine.SceneManagement;
 [RequireComponent(typeof(Animator))]
 public class EnemyMovement : MonoBehaviour
 {
+    public class Enemy
+    {
+        public string id;
+        public EnemyState state;
+        public int hitsTaken;
+
+        public Enemy(string id, EnemyState state)
+        {
+            this.id = id;
+            this.state = state;
+            hitsTaken = 0;
+        }
+    }
+
     public enum EnemyState
     {
         Walk,
@@ -20,50 +35,49 @@ public class EnemyMovement : MonoBehaviour
     public float runAwaySpeed = 5f;
     public float detectionRange = 5f;
 
-    public static EnemyState enemyState;
     public Transform playerTransform;
-    private int hitsTaken;
     private bool isHitCooldown;
     public float hitCooldownDuration = 2f;
-    public Rigidbody rb;
     public Transform startPoint;
     public Transform endPoint;
     private Transform target;
     private Animator _animatorController;
     public int corpseDuration;
+    public static List<Enemy> enemies = new List<Enemy>();
 
     void Start()
     {
         _animatorController = GetComponent<Animator>();
-        enemyState = EnemyState.Walk;
-        hitsTaken = 0;
-        rb = GetComponent<Rigidbody>();
         target = endPoint;
+        var enemy = new Enemy(gameObject.name, EnemyState.Walk);
+        enemies.Add(enemy);
     }
 
     void Update()
     {
-        switch (enemyState)
+        var enemy = enemies.FirstOrDefault(x => x.id == gameObject.name);
+        if (enemy != null)
         {
-            case EnemyState.Walk:
-                _animatorController.SetBool("seePlayer", false);
-                Walk();
-                break;
-            case EnemyState.Attack:
-                _animatorController.SetBool("seePlayer", true);
-                Attack();
-                break;
-            case EnemyState.RunAway:
-                _animatorController.SetTrigger("damage");
-                RunAway();
-                break;
-            case EnemyState.Dead:
-                _animatorController.SetTrigger("DeathEnemy");
-                Invoke("Dead", corpseDuration);
-                break;
+            switch (enemy.state)
+            {
+                case EnemyState.Walk:
+                    _animatorController.SetBool("seePlayer", false);
+                    Walk();
+                    break;
+                case EnemyState.Attack:
+                    _animatorController.SetBool("seePlayer", true);
+                    Attack();
+                    break;
+                case EnemyState.RunAway:
+                    _animatorController.SetTrigger("damage");
+                    RunAway();
+                    break;
+                case EnemyState.Dead:
+                    _animatorController.SetTrigger("DeathEnemy");
+                    Invoke("Dead", corpseDuration);
+                    break;
+            }
         }
-
-        SpeedControl();
     }
 
     void Walk()
@@ -78,9 +92,13 @@ public class EnemyMovement : MonoBehaviour
         }
 
         // Check if the player is in front of the enemy to switch to Attack state
-        if (Vector3.Distance(transform.position, playerTransform.position) < detectionRange && PlayerMovement.state != PlayerMovement.PlayerState.Dead)
+        if (Vector3.Distance(transform.position, playerTransform.position) <= detectionRange && PlayerMovement.state != PlayerMovement.PlayerState.Dead)
         {
-            enemyState = hitsTaken == 1 ? EnemyState.RunAway : EnemyState.Attack;
+            var enemy = enemies.FirstOrDefault(x => x.id == gameObject.name);
+            if(enemy != null)
+            {
+                enemy.state = enemy.hitsTaken == 1 ? EnemyState.RunAway : EnemyState.Attack;
+            }
         }
     }
 
@@ -88,11 +106,15 @@ public class EnemyMovement : MonoBehaviour
     {
         // Move towards the player
         transform.position = Vector3.MoveTowards(transform.position, playerTransform.position, walkSpeed * Time.deltaTime);
-
+        
         // Check if the player is still in range or dead
-        if (Vector3.Distance(transform.position, playerTransform.position) > detectionRange || PlayerMovement.state == PlayerMovement.PlayerState.Dead)
+        if (PlayerMovement.state == PlayerMovement.PlayerState.Dead)
         {
-            enemyState = EnemyState.Walk;
+            var enemy = enemies.FirstOrDefault(x => x.id == gameObject.name);
+            if(enemy != null)
+            {
+                enemy.state = EnemyState.Walk;
+            }
         }
     }
 
@@ -104,8 +126,12 @@ public class EnemyMovement : MonoBehaviour
         // Check if the player is no longer in range, then switch back to Walk
         if (Vector3.Distance(transform.position, playerTransform.position) > detectionRange)
         {
-            hitsTaken = 0; // Get healthy if ran away successfully
-            enemyState = EnemyState.Walk;
+            var enemy = enemies.FirstOrDefault(x => x.id == gameObject.name);
+            if(enemy != null)
+            {
+                enemy.hitsTaken = 0; // Get healthy if ran away successfully
+                enemy.state = EnemyState.Walk;
+            }
         }
     }
 
@@ -118,32 +144,27 @@ public class EnemyMovement : MonoBehaviour
     {
         isHitCooldown = false;
     }
-    private void SpeedControl()
-    {
-        Vector3 flatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
 
-        // Limit velocity if needed
-        if (flatVel.magnitude > walkSpeed)
+    public void OnTriggerEnter(Collider other)
+    {
+        var enemy = enemies.FirstOrDefault(x => x.id == gameObject.name);
+        if (other == null || enemy == null)
         {
-            Vector3 limitedVel = flatVel.normalized * walkSpeed;
-            rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
+            return;
         }
-    }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (playerTransform.gameObject == other.gameObject && enemyState != EnemyState.Dead && !isHitCooldown)
+        if (playerTransform.gameObject == other.gameObject && enemy.state != EnemyState.Dead && !isHitCooldown)
         {
-            hitsTaken++;
-            if (hitsTaken == 1)
+            enemy.hitsTaken++;
+            if (enemy.hitsTaken == 1)
             {
-                enemyState = EnemyState.RunAway;
+                enemy.state = EnemyState.RunAway;
                 isHitCooldown = true;
                 Invoke("ResetHitCooldown", hitCooldownDuration);
             }
-            else if (hitsTaken >= 2)
+            else if (enemy.hitsTaken >= 2)
             {
-                enemyState = EnemyState.Dead;
+                enemy.state = EnemyState.Dead;
             }
         }
     }

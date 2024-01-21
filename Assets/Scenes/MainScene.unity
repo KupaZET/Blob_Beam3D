@@ -205,7 +205,7 @@ PrefabInstance:
       objectReference: {fileID: 1280446133571650962, guid: 0f13d59a1591a454cad8e14931986278, type: 3}
     - target: {fileID: 919132149155446097, guid: 0f13d59a1591a454cad8e14931986278, type: 3}
       propertyPath: m_Name
-      value: StoneHead (2)
+      value: StoneHead_4
       objectReference: {fileID: 0}
     - target: {fileID: 1870193185674709813, guid: 0f13d59a1591a454cad8e14931986278, type: 3}
       propertyPath: m_LocalScale.y
@@ -1779,7 +1779,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 840ae2cd56abbc3419c7eef23d2acb2a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 6.02
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 840ae2cd56abbc3419c7eef23d2acb2a, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1941,7 +1941,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 522789284}
   m_LocalRotation: {x: 0.11559233, y: -0.000000034182086, z: 0.0000000039778514, w: 0.9932968}
-  m_LocalPosition: {x: 6.02, y: 1.2, z: -7}
+  m_LocalPosition: {x: 6, y: 1.2, z: -7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2784,7 +2784,7 @@ PrefabInstance:
       objectReference: {fileID: 1280446133571650962, guid: 0f13d59a1591a454cad8e14931986278, type: 3}
     - target: {fileID: 919132149155446097, guid: 0f13d59a1591a454cad8e14931986278, type: 3}
       propertyPath: m_Name
-      value: StoneHead
+      value: StoneHead_1
       objectReference: {fileID: 0}
     - target: {fileID: 1870193185674709813, guid: 0f13d59a1591a454cad8e14931986278, type: 3}
       propertyPath: m_LocalScale.y
@@ -2900,14 +2900,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   walkSpeed: 2
-  runAwaySpeed: 2.5
+  runAwaySpeed: 1
   detectionRange: 5
   playerTransform: {fileID: 756512598}
-  hitCooldownDuration: 2
-  rb: {fileID: 662482039}
+  hitCooldownDuration: 0.5
   startPoint: {fileID: 1998788628}
   endPoint: {fileID: 2018885477}
-  corpseDuration: 5
+  corpseDuration: 0
 --- !u!95 &662482038
 Animator:
   serializedVersion: 5
@@ -3036,14 +3035,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   walkSpeed: 2
-  runAwaySpeed: 2.5
+  runAwaySpeed: 1
   detectionRange: 5
   playerTransform: {fileID: 756512598}
-  hitCooldownDuration: 2
-  rb: {fileID: 677085878}
+  hitCooldownDuration: 0.5
   startPoint: {fileID: 2090259296}
   endPoint: {fileID: 145530603}
-  corpseDuration: 5
+  corpseDuration: 0
 --- !u!95 &677085877
 Animator:
   serializedVersion: 5
@@ -3497,7 +3495,7 @@ MonoBehaviour:
   orientation: {fileID: 830020156}
   _animatorController: {fileID: 756512599}
   enemyCollider: {fileID: 1015871761}
-  corpseDuration: 2
+  corpseDuration: 0
 --- !u!135 &756512602
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -4275,14 +4273,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   walkSpeed: 2
-  runAwaySpeed: 2.5
+  runAwaySpeed: 1
   detectionRange: 5
   playerTransform: {fileID: 756512598}
-  hitCooldownDuration: 2
-  rb: {fileID: 868531533}
+  hitCooldownDuration: 0.5
   startPoint: {fileID: 1572467927}
   endPoint: {fileID: 860917507}
-  corpseDuration: 5
+  corpseDuration: 0
 --- !u!95 &868531532
 Animator:
   serializedVersion: 5
@@ -5385,14 +5382,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   walkSpeed: 2
-  runAwaySpeed: 2.5
+  runAwaySpeed: 1
   detectionRange: 5
   playerTransform: {fileID: 756512598}
-  hitCooldownDuration: 2
-  rb: {fileID: 1015871765}
+  hitCooldownDuration: 0.5
   startPoint: {fileID: 1180141733}
   endPoint: {fileID: 1326957960}
-  corpseDuration: 5
+  corpseDuration: 0
 --- !u!95 &1015871764
 Animator:
   serializedVersion: 5
@@ -7268,7 +7264,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1378747524}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 6.02, y: 1.2, z: -7}
+  m_LocalPosition: {x: 6, y: 1.2, z: -7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -7374,14 +7370,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   walkSpeed: 2
-  runAwaySpeed: 2.5
+  runAwaySpeed: 1
   detectionRange: 5
   playerTransform: {fileID: 756512598}
-  hitCooldownDuration: 2
-  rb: {fileID: 1417602784}
+  hitCooldownDuration: 0.5
   startPoint: {fileID: 1064804846}
   endPoint: {fileID: 1061802885}
-  corpseDuration: 5
+  corpseDuration: 0
 --- !u!95 &1417602783
 Animator:
   serializedVersion: 5
@@ -9089,7 +9084,7 @@ PrefabInstance:
       objectReference: {fileID: 1280446133571650962, guid: 0f13d59a1591a454cad8e14931986278, type: 3}
     - target: {fileID: 919132149155446097, guid: 0f13d59a1591a454cad8e14931986278, type: 3}
       propertyPath: m_Name
-      value: StoneHead (1)
+      value: StoneHead_3
       objectReference: {fileID: 0}
     - target: {fileID: 1870193185674709813, guid: 0f13d59a1591a454cad8e14931986278, type: 3}
       propertyPath: m_LocalScale.y
@@ -9178,7 +9173,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1649833150}
-  m_LocalRotation: {x: -0.0000000019889252, y: -0.99329674, z: 0.11559233, w: -0.00000001709104}
+  m_LocalRotation: {x: -0.0000000019889257, y: -0.99329674, z: 0.11559233, w: -0.000000017091043}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -9256,7 +9251,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1649997029}
-  m_LocalRotation: {x: 0.0000000016409465, y: -0.99571073, z: 0.09252102, w: 0.000000017659858}
+  m_LocalRotation: {x: 0.0000000016409466, y: -0.99571073, z: 0.09252102, w: 0.00000001765986}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -10375,7 +10370,7 @@ PrefabInstance:
       objectReference: {fileID: 1280446133571650962, guid: 0f13d59a1591a454cad8e14931986278, type: 3}
     - target: {fileID: 919132149155446097, guid: 0f13d59a1591a454cad8e14931986278, type: 3}
       propertyPath: m_Name
-      value: StoneHead
+      value: StoneHead_2
       objectReference: {fileID: 0}
     - target: {fileID: 1870193185674709813, guid: 0f13d59a1591a454cad8e14931986278, type: 3}
       propertyPath: m_LocalScale.y

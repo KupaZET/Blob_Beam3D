@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
+using System.Linq;
 
 
 [RequireComponent(typeof(Animator))]
@@ -153,8 +154,11 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        var enemy = EnemyMovement.enemies.FirstOrDefault(x => x.id == other.gameObject.name);
+        if (enemy == null) return;
+
         if ((enemyCollider.gameObject.name == other.gameObject.name && state != PlayerState.Dead && grounded && underPlayer.name != "StoneHead" 
-            && (EnemyMovement.enemyState != EnemyMovement.EnemyState.Dead || EnemyMovement.enemyState != EnemyMovement.EnemyState.RunAway)) 
+            && (enemy.state == EnemyMovement.EnemyState.Attack)) 
             || (other.transform.parent != null && other.transform.parent.gameObject.name == "DamagesPlayer"))
         {
             _animatorController.SetTrigger("Death");
