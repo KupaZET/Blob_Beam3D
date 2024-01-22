@@ -3479,7 +3479,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be71b8463bf0a994f94c05de767e75d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 2.5
+  moveSpeed: 3.5
   groundDrag: 0
   jumpForce: 6
   jumpCooldown: 0.5
@@ -9251,7 +9251,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1649997029}
-  m_LocalRotation: {x: 0.0000000016409466, y: -0.99571073, z: 0.09252102, w: 0.00000001765986}
+  m_LocalRotation: {x: -0.0000000016409462, y: -0.99571073, z: 0.09252102, w: -0.000000017659854}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

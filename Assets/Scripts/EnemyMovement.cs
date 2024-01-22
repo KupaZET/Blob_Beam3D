@@ -106,9 +106,9 @@ public class EnemyMovement : MonoBehaviour
     {
         // Move towards the player
         transform.position = Vector3.MoveTowards(transform.position, playerTransform.position, walkSpeed * Time.deltaTime);
-        
+
         // Check if the player is still in range or dead
-        if (PlayerMovement.state == PlayerMovement.PlayerState.Dead)
+        if (Vector3.Distance(transform.position, playerTransform.position) > detectionRange || PlayerMovement.state == PlayerMovement.PlayerState.Dead)
         {
             var enemy = enemies.FirstOrDefault(x => x.id == gameObject.name);
             if(enemy != null)

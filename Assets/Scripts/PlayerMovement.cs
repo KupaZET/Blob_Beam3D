@@ -77,6 +77,14 @@ public class PlayerMovement : MonoBehaviour
             rb.drag = groundDrag;
         else
             rb.drag = 0;
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            _animatorController.SetTrigger("Death");
+            state = PlayerState.Dead;
+
+            LoadScene("MainMenuScene");
+        }
     }
 
     private void FixedUpdate()
