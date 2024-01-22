@@ -155,7 +155,7 @@ public class PlayerMovement : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         var enemy = EnemyMovement.enemies.FirstOrDefault(x => x.id == other.gameObject.name);
-        if (enemy == null) return;
+        if (enemy == null && (other.transform.parent == null || other.transform.parent.gameObject.name != "DamagesPlayer")) return;
 
         if ((enemyCollider.gameObject.name == other.gameObject.name && state != PlayerState.Dead && grounded && underPlayer.name != "StoneHead" 
             && (enemy.state == EnemyMovement.EnemyState.Attack)) 
